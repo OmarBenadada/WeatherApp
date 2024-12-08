@@ -46,7 +46,7 @@ class WeatherWindow(QWidget):
               "appid":"f43e187881ffa1ef9623a04fb490b629",
               "units":"metric"}
         responce=requests.get(base_url,params=para)
-        self.temperarute.setText(responce.json()['main']['temp'])
+        self.temperarute.setText(str(f'{responce.json()['main']['temp']}°C'))
         
            
 class main():
