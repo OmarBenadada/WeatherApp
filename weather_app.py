@@ -11,6 +11,8 @@ class WeatherWindow(QWidget):
         self.Enter_cityname=QLabel("Enter The City Name :",self)
         self.button = QPushButton("Click Here", self)
         self.button.clicked.connect(self.on_click)        
+        self.unite=QLineEdit(self)
+        self.unite.setPlaceholderText("Choose A unite: C , K , F")
         self.cityname=QLineEdit(self)
         self.cityname.setPlaceholderText("Enter the name...")
         self.temperarute=QLabel(self)
@@ -22,8 +24,8 @@ class WeatherWindow(QWidget):
         
         self.setWindowTitle("Weather App")
         
-        names=[self.Enter_cityname,self.button,self.cityname,self.temperarute,self.emoji,self.Hala]
-        sizes=[40,40,40,70,80,60]
+        names=[self.Enter_cityname,self.button,self.cityname,self.unite,self.temperarute,self.emoji,self.Hala]
+        sizes=[40,40,40,40,70,80,60]
         vbox=QVBoxLayout()
         self.setLayout(vbox)
         
@@ -41,11 +43,29 @@ class WeatherWindow(QWidget):
         
     def on_click(self):
         base_url = "https://api.openweathermap.org/data/2.5/weather"
+        
+        units=self.unite.text()
+    
         input_text = self.cityname.text()
+        
+        if units.upper()=="C":
+                final='metric'
+        elif units.upper()=="F":
+                final='imperial'
+        elif units.upper()=="K":
+                final='standard'
+        elif units.upper()=="":
+                final='metric'
+                units="C"
+                
+        else:
+            self.temperarute.setText("Pls try Again this isnt a valid unit")
+            return
         para={"q":input_text,
               "appid":"f43e187881ffa1ef9623a04fb490b629",
-              "units":"metric"}
+              "units":final}
         responce=requests.get(base_url,params=para)
+        
         try:
             match responce.status_code:
                 
@@ -53,7 +73,7 @@ class WeatherWindow(QWidget):
                     self.temperarute.setText("Informational Error")
 
                 case 200 | 201 | 202 | 203 | 204 | 205 | 206 | 207 | 208 | 226:
-                    self.temperarute.setText(str(f'{responce.json()['main']['temp']}°C'))
+                    self.temperarute.setText(str(f'{responce.json()['main']['temp']}°{units}'))
 
                 case 300 | 301 | 302 | 303 | 304 | 305 | 306 | 307 | 308:
                     self.temperarute.setText('Redirection Responses Error')
