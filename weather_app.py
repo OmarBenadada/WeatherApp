@@ -64,8 +64,44 @@ class WeatherWindow(QWidget):
 
             case 500 | 501 | 502 | 503 | 504 | 505 | 506 | 507 | 508 | 510 | 511:
                 self.temperarute.setText('Server Errors')
-                
-        
+            case _:
+                self.temperarute.setText('Enkown Error')   
+        try:         
+            match responce.json()['weather'][0]["main"]:
+                case "Clear":
+                    self.emoji.setText('☀️')  
+                case "Clouds":
+                    self.emoji.setText('☁️')  
+                case "Rain":
+                    self.emoji.setText('🌧️')  
+                case "Drizzle":
+                    self.emoji.setText('🌦️')  
+                case "Thunderstorm":
+                    self.emoji.setText('⛈️')  
+                case "Snow":
+                    self.emoji.setText('❄️')  
+                case "Mist":
+                    self.emoji.setText('🌫️') 
+                case "Smoke":
+                    self.emoji.setText('🔥') 
+                case "Haze":
+                    self.emoji.setText('🌫️') 
+                case "Dust":
+                    self.emoji.setText('🌬️') 
+                case "Fog":
+                    self.emoji.setText('🌫️') 
+                case "Sand":
+                    self.emoji.setText('🌬️')  
+                case "Ash":
+                    self.emoji.setText('🌋')  
+                case "Squall":
+                    self.emoji.setText('🌬️')  
+                case "Tornado":
+                    self.emoji.setText('🌪️')   
+                case _:
+                    return "Unknown Weather Status ❓"      
+        except KeyError:
+                print("pls Try to correct the name you entered")
            
 class main():
     weatherapp=QApplication(sys.argv)
