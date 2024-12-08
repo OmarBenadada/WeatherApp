@@ -40,13 +40,31 @@ class WeatherWindow(QWidget):
         self.cityname.setMaximumHeight(60)
         
     def on_click(self):
+        
         base_url = "https://api.openweathermap.org/data/2.5/weather"
         input_text = self.cityname.text()
         para={"q":input_text,
               "appid":"f43e187881ffa1ef9623a04fb490b629",
               "units":"metric"}
         responce=requests.get(base_url,params=para)
-        self.temperarute.setText(str(f'{responce.json()['main']['temp']}°C'))
+        
+        match responce.status_code:
+            
+            case 100 | 101 | 102 | 103:
+                self.temperarute.setText("Informational Error")
+
+            case 200 | 201 | 202 | 203 | 204 | 205 | 206 | 207 | 208 | 226:
+                self.temperarute.setText(str(f'{responce.json()['main']['temp']}°C'))
+
+            case 300 | 301 | 302 | 303 | 304 | 305 | 306 | 307 | 308:
+                self.temperarute.setText('Redirection Responses Error')
+
+            case 400 | 401 | 402 | 403 | 404 | 405 | 406 | 407 | 408 | 409 | 410 | 411 | 412 | 413 | 414 | 415 | 416 | 417 | 418 | 421 | 422 | 423 | 424 | 425 | 426 | 428 | 429 | 431 | 451:
+                self.temperarute.setText('Client Errors')
+
+            case 500 | 501 | 502 | 503 | 504 | 505 | 506 | 507 | 508 | 510 | 511:
+                self.temperarute.setText('Server Errors')
+                
         
            
 class main():
